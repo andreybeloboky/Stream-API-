@@ -2,20 +2,20 @@ package by.beloboky.employee;
 
 import java.time.LocalDate;
 
-public class Duties {
+public class Duty {
 
-    private LocalDate dateTime;
-    private String duties;
-    private int ID;
+    private final LocalDate dateTime;
+    private final String duties;
+    private final int id;
 
-    public Duties(int ID, LocalDate dateTime, String duties) {
+    public Duty(int id, LocalDate dateTime, String duties) {
         this.dateTime = dateTime;
         this.duties = duties;
-        this.ID = ID;
+        this.id = id;
     }
 
     public int getID() {
-        return ID;
+        return id;
     }
 
     public LocalDate getDateTime() {

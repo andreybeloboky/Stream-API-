@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Employee {
 
-    private final int ID;
+    private final int id;
     private final String name;
     private final String lastName;
     private final int age;
@@ -12,9 +12,9 @@ public class Employee {
     private final String position;
     private final int salary;
     private final int workExperience;
-    private final List<Duties> duties;
+    private final List<Duty> duties;
 
-    public Employee(String name, String lastName, Integer age, String sex, String position, Integer salary, Integer workExperience, List<Duties> duties, Integer ID) {
+    public Employee(String name, String lastName, Integer age, String sex, String position, Integer salary, Integer workExperience, List<Duty> duties, Integer id) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
@@ -23,7 +23,7 @@ public class Employee {
         this.salary = salary;
         this.workExperience = workExperience;
         this.duties = duties;
-        this.ID = ID;
+        this.id = id;
     }
 
     public String getName() {
@@ -49,15 +49,6 @@ public class Employee {
     public int getWorkExperience() {
         return workExperience;
     }
-
-    public int getID() {
-        return ID;
-    }
-
-    public List<Duties> getDuties() {
-        return duties;
-    }
-
     public int getDutiesSize() {
         return duties.size();
     }
@@ -65,7 +56,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "ID=" + ID +
+                "ID=" + id +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +

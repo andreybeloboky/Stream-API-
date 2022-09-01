@@ -1,24 +1,29 @@
 package by.beloboky.employee;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FileRepositoryOfEmployeesAndDuties {
+public class EmployeesAndDutiesFileRepository {
 
-    private final File file = new File("data_users.csv");
-    private final File file_duties = new File("duties_with_data.csv");
-    private static List<Duties> dutiesForEmployee = new LinkedList<>();
+    private final File file;
+    private final File file_duties;
+    public static List<Duty> dutiesForEmployee = new LinkedList<>();
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public EmployeesAndDutiesFileRepository() {
+        this.file = new File("data_users.csv");
+        this.file_duties = new File("duties_with_data.csv");
+    }
 
     /**
      * @return the list of Duties objects;
      */
-    public List<Duties> getDutiesForEmployee() {
+    public List<Duty> getDutiesForEmployee() {
         return dutiesForEmployee;
     }
 
@@ -27,7 +32,7 @@ public class FileRepositoryOfEmployeesAndDuties {
      * @throws IOException unchecked exception.
      */
     public List<Employee> readFromFileEmployees() throws IOException {
-        return Files.lines(file.toPath()).map(FileRepositoryOfEmployeesAndDuties::convertToEmployee).toList();
+        return Files.lines(file.toPath()).map(EmployeesAndDutiesFileRepository::convertToEmployee).toList();
     }
 
     /**
@@ -35,18 +40,18 @@ public class FileRepositoryOfEmployeesAndDuties {
      * @throws IOException unchecked exception.
      */
     public void readFromFileDuties() throws IOException {
-        FileRepositoryOfEmployeesAndDuties.dutiesForEmployee = Files.lines(file_duties.toPath()).map(FileRepositoryOfEmployeesAndDuties::convertToDuties).toList();
+        EmployeesAndDutiesFileRepository.dutiesForEmployee = Files.lines(file_duties.toPath()).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
     }
 
     /**
      * @param s is string from duties_with_data file.
      * @return Duties object
      */
-    private static Duties convertToDuties(String s) {
+    private static Duty convertToDuties(String s) {
         String[] find = s.split(",");
         LocalDate date = LocalDate.parse(find[1], FORMATTER);
         int currentID = Integer.parseInt(find[0]);
-        return new Duties(currentID, date, find[2]);
+        return new Duty(currentID, date, find[2]);
     }
 
     /**
@@ -59,8 +64,8 @@ public class FileRepositoryOfEmployeesAndDuties {
         int j = Integer.parseInt(find[5]);
         int k = Integer.parseInt(find[6]);
         int ID = Integer.parseInt(find[7]);
-        List<Duties> forEachEmployee = new LinkedList<>();
-        for (Duties duties : dutiesForEmployee) {
+        List<Duty> forEachEmployee = new LinkedList<>();
+        for (Duty duties : dutiesForEmployee) {
             if (duties.getID() == ID) {
                 forEachEmployee.add(duties);
             }
