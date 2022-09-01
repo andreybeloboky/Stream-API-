@@ -1,16 +1,18 @@
+package by.beloboky.employee;
+
 import java.util.List;
 
-public class Employee implements Comparable<Employee> {
+public class Employee {
 
-    private int ID;
-    private String name;
-    private String lastName;
-    private int age;
-    private String sex;
-    private String position;
-    private int salary;
-    private int workExperience;
-    private List<Duties> duties;
+    private final int ID;
+    private final String name;
+    private final String lastName;
+    private final int age;
+    private final String sex;
+    private final String position;
+    private final int salary;
+    private final int workExperience;
+    private final List<Duties> duties;
 
     public Employee(String name, String lastName, Integer age, String sex, String position, Integer salary, Integer workExperience, List<Duties> duties, Integer ID) {
         this.name = name;
@@ -74,11 +76,4 @@ public class Employee implements Comparable<Employee> {
                 ", duties=" + duties +
                 '}';
     }
-
-    @Override
-    public int compareTo(Employee o) {
-        return o.getSalary() - this.salary;
-    }
-
-
 }

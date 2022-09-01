@@ -1,13 +1,14 @@
+package by.beloboky.employee;
+
 import java.io.*;
 import java.util.*;
 
 public class ConsoleController {
 
     public static void main(String[] args) throws IOException {
-        ReadFromFile read = new ReadFromFile();
+        FileRepositoryOfEmployeesAndDuties read = new FileRepositoryOfEmployeesAndDuties();
         read.readFromFileDuties();
-        List<Employee> emp = read.readFromFileEmployees();
-        BusinessLogic businessLogic = new BusinessLogic(emp);
+        EmployeeService businessLogic = new EmployeeService();
 
         // Task number One;
         System.out.println("TASK NUMBER ONE");

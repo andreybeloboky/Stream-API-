@@ -1,20 +1,19 @@
+package by.beloboky.employee;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReadFromFile {
+public class FileRepositoryOfEmployeesAndDuties {
 
     private final File file = new File("data_users.csv");
     private final File file_duties = new File("duties_with_data.csv");
     private static List<Duties> dutiesForEmployee = new LinkedList<>();
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    public ReadFromFile() {
-    }
 
     /**
      * @return the list of Duties objects;
@@ -28,7 +27,7 @@ public class ReadFromFile {
      * @throws IOException unchecked exception.
      */
     public List<Employee> readFromFileEmployees() throws IOException {
-        return Files.lines(file.toPath()).map(ReadFromFile::convertToEmployee).toList();
+        return Files.lines(file.toPath()).map(FileRepositoryOfEmployeesAndDuties::convertToEmployee).toList();
     }
 
     /**
@@ -36,7 +35,7 @@ public class ReadFromFile {
      * @throws IOException unchecked exception.
      */
     public void readFromFileDuties() throws IOException {
-        ReadFromFile.dutiesForEmployee = Files.lines(file_duties.toPath()).map(ReadFromFile::convertToDuties).toList();
+        FileRepositoryOfEmployeesAndDuties.dutiesForEmployee = Files.lines(file_duties.toPath()).map(FileRepositoryOfEmployeesAndDuties::convertToDuties).toList();
     }
 
     /**
