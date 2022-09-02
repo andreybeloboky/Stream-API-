@@ -5,17 +5,17 @@ import java.util.List;
 public class Employee {
 
     private final int id;
-    private final String name;
+    private final String firstName;
     private final String lastName;
     private final int age;
-    private final String sex;
-    private final String position;
+    private final Sex sex;
+    private final Position position;
     private final int salary;
     private final int workExperience;
     private final List<Duty> duties;
 
-    public Employee(String name, String lastName, Integer age, String sex, String position, Integer salary, Integer workExperience, List<Duty> duties, Integer id) {
-        this.name = name;
+    public Employee(String firstName, String lastName, Integer age, Sex sex, Position position, Integer salary, Integer workExperience, List<Duty> duties, Integer id) {
+        this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.sex = sex;
@@ -26,26 +26,24 @@ public class Employee {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public List<Duty> getDuties() {
+        return duties;
     }
-
+    public String getFirstName() {
+        return firstName;
+    }
     public String getLastName() {
         return lastName;
     }
-
     public int getAge() {
         return age;
     }
-
-    public String getPosition() {
+    public Position getPosition() {
         return position;
     }
-
     public int getSalary() {
         return salary;
     }
-
     public int getWorkExperience() {
         return workExperience;
     }
@@ -57,7 +55,7 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "ID=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
                 ", sex='" + sex + '\'' +

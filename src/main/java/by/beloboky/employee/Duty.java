@@ -4,13 +4,13 @@ import java.time.LocalDate;
 
 public class Duty {
 
-    private final LocalDate dateTime;
-    private final String duties;
+    private final LocalDate date;
+    private final String duty;
     private final int id;
 
-    public Duty(int id, LocalDate dateTime, String duties) {
-        this.dateTime = dateTime;
-        this.duties = duties;
+    public Duty(int id, LocalDate date, String duty) {
+        this.date = date;
+        this.duty = duty;
         this.id = id;
     }
 
@@ -18,19 +18,19 @@ public class Duty {
         return id;
     }
 
-    public LocalDate getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public String getDuties() {
-        return duties;
+    public String getDuty() {
+        return duty;
     }
 
     @Override
     public String toString() {
         return "Duties{" +
-                "dateTime=" + dateTime +
-                ", duties='" + duties + '\'' +
+                "dateTime=" + date +
+                ", duties='" + duty + '\'' +
                 '}';
     }
 }

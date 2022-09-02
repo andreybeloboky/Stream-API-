@@ -2,45 +2,48 @@ package by.beloboky.employee;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeesAndDutiesFileRepository {
 
+    private static final String FILE_EMPLOYEE = "data_users.csv";
+
+    private static final String FILE_DUTIES = "duties_with_data.csv";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final File file;
-    private final File file_duties;
-    public static List<Duty> dutiesForEmployee = new LinkedList<>();
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final File fileDuties;
 
     public EmployeesAndDutiesFileRepository() {
-        this.file = new File("data_users.csv");
-        this.file_duties = new File("duties_with_data.csv");
-    }
-
-    /**
-     * @return the list of Duties objects;
-     */
-    public List<Duty> getDutiesForEmployee() {
-        return dutiesForEmployee;
+        this.file = new File(FILE_EMPLOYEE);
+        this.fileDuties = new File(FILE_DUTIES);
     }
 
     /**
      * @return The List includes employees.
-     * @throws IOException unchecked exception.
      */
-    public List<Employee> readFromFileEmployees() throws IOException {
-        return Files.lines(file.toPath()).map(EmployeesAndDutiesFileRepository::convertToEmployee).toList();
+    public List<Employee> readFromFileEmployees() {
+        try {
+            return Files.lines(file.toPath()).map(EmployeesAndDutiesFileRepository::convertToEmployee).toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
      * @return The List includes duties.
-     * @throws IOException unchecked exception.
      */
-    public void readFromFileDuties() throws IOException {
-        EmployeesAndDutiesFileRepository.dutiesForEmployee = Files.lines(file_duties.toPath()).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
+    public List<Duty> readFromFileDuties() {
+        try {
+            return Files.lines(fileDuties.toPath()).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
@@ -59,17 +62,29 @@ public class EmployeesAndDutiesFileRepository {
      * @return Employee object
      */
     private static Employee convertToEmployee(String s) {
+        EmployeesAndDutiesFileRepository e = new EmployeesAndDutiesFileRepository();
+        List<Duty> dutiesForEmployee = e.readFromFileDuties();
         String[] find = s.split(",");
-        int i = Integer.parseInt(find[2]);
-        int j = Integer.parseInt(find[5]);
-        int k = Integer.parseInt(find[6]);
-        int ID = Integer.parseInt(find[7]);
+        int age = Integer.parseInt(find[2]);
+        int salary = Integer.parseInt(find[5]);
+        int workExp = Integer.parseInt(find[6]);
+        int id = Integer.parseInt(find[7]);
         List<Duty> forEachEmployee = new LinkedList<>();
         for (Duty duties : dutiesForEmployee) {
-            if (duties.getID() == ID) {
+            if (duties.getID() == id) {
                 forEachEmployee.add(duties);
             }
         }
-        return new Employee(find[0], find[1], i, find[3], find[4], j, k, forEachEmployee, ID);
+        Position position;
+        if (Objects.equals(find[4], "manager")){
+            position = Position.MANAGER;
+        } else if (Objects.equals(find[4], "employee")) {
+            position = Position.EMPLOYEE;
+        } else if (Objects.equals(find[4], "security")) {
+            position = Position.SECURITY;
+        } else{
+            position = Position.DIRECTOR;
+        }
+        return new Employee(find[0], find[1], age, Objects.equals(find[3], "M") ? Sex.MALE : Sex.FEMALE, position, salary, workExp, forEachEmployee, id);
     }
 }
