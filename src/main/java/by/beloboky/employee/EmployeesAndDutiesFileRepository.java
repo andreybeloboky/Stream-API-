@@ -63,7 +63,7 @@ public class EmployeesAndDutiesFileRepository {
      * @param s is string from data_users file.
      * @return Employee object
      */
-    private static Employee convertToEmployee(String s) {
+    private static Employee convertToEmployee(String s) throws NotFoundEmployeeException {
         String[] find = s.split(",");
         int age = Integer.parseInt(find[2]);
         int salary = Integer.parseInt(find[5]);
