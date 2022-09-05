@@ -94,7 +94,7 @@ public class EmployeesAndDutiesFileRepository {
                 return Position.EMPLOYEE;
             }
             default ->
-                    throw new NotFoundEmployeeException(String.format("Type %s is not a valid position. Please check you file", find[4]));
+                    throw new Incorrect(String.format("Type %s is not a valid position. Please check you file", find[4]));
         }
     }
 
@@ -106,7 +106,7 @@ public class EmployeesAndDutiesFileRepository {
         if (Objects.equals(find[3], "M") || Objects.equals(find[3], "W")) {
             return Objects.equals(find[3], "M") ? Sex.MALE : Sex.FEMALE;
         } else {
-            throw new NotFoundEmployeeException(String.format("Type %s is not a valid position. Please check you file", find[3]));
+            throw new Incorrect(String.format("Type %s is not a valid position. Please check you file", find[3]));
         }
     }
 
