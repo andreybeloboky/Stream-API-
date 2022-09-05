@@ -55,7 +55,7 @@ public class EmployeeConsoleController {
         System.out.println();
 
         System.out.println("TASK NUMBER ELEVEN");
-        System.out.println(employeeService.checkWhetherAllAreEighteenAge());
+        System.out.println(employeeService.areWhetherAllAreEighteenAge());
         System.out.println();
 
         System.out.println("TASK MAX/MIN/AVERAGE");

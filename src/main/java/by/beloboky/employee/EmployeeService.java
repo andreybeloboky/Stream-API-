@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 public class EmployeeService {
     private final List<Employee> employees;
+
     public EmployeeService() {
         EmployeesAndDutiesFileRepository readFromFileEmployee = new EmployeesAndDutiesFileRepository();
         this.employees = readFromFileEmployee.readFromFileEmployees();
@@ -30,7 +31,7 @@ public class EmployeeService {
      * @return List of Employee type which consists of manager objects and sorted by first name;
      */
     public List<Employee> findManagerAgeFromThirtyFiveToSixty() {
-        return employees.stream().filter(s -> (s.getAge() >= 35 && s.getAge() <= 60) && Objects.equals(s.getPosition().toString(), "manager")).sorted(Comparator.comparing(Employee::getFirstName)).toList();
+        return employees.stream().filter(s -> (s.getAge() >= 35 && s.getAge() <= 60) && Objects.equals(s.getPosition(), Position.MANAGER)).sorted(Comparator.comparing(Employee::getFirstName)).toList();
     }
 
     /**
@@ -44,7 +45,7 @@ public class EmployeeService {
      * @return int type, calculate all salary of security and multiply their by three.
      */
     public int calculateSumOfAllSecutiryAndMultiplyByThree() {
-        return employees.stream().filter(s -> Objects.equals(s.getPosition().toString(), "security")).map(s -> 3 * s.getSalary()).mapToInt(Integer::intValue).sum();
+        return employees.stream().filter(s -> Objects.equals(s.getPosition(), Position.SECURITY)).map(s -> 3 * s.getSalary()).mapToInt(Integer::intValue).sum();
     }
 
     /**
@@ -58,12 +59,12 @@ public class EmployeeService {
      * @return List of String type, which consists of duties for the day;
      */
     public List<String> findDutiesForTheDay() {
-        List<Duty> duties = employees.stream().map(Employee::getDuties).flatMap(Collection::stream).toList();
-        return duties.stream().filter(value -> {
+        return employees.stream().map(Employee::getDuties).flatMap(Collection::stream).filter(value -> {
                     LocalDate date = LocalDate.of(2022, 1, 3);
                     return Objects.equals(value.getDate(), date);
                 }
         ).map(Duty::getDuty).toList();
+
     }
 
     /**
@@ -77,7 +78,7 @@ public class EmployeeService {
      * @return List of Employee type, which consists of managers with having unique objects.
      */
     public List<Employee> findUniqueManagerEmployee() {
-        return employees.stream().filter(s -> Objects.equals(s.getPosition().toString(), "manager")).collect(Collectors.toSet()).stream().toList();
+        return employees.stream().filter(s -> Objects.equals(s.getPosition(), Position.MANAGER)).collect(Collectors.toSet()).stream().toList();
     }
 
     /**
@@ -90,7 +91,7 @@ public class EmployeeService {
     /**
      * @return boolean type, are all employees over 18 years old.
      */
-    public boolean checkWhetherAllAreEighteenAge() {
+    public boolean areWhetherAllAreEighteenAge() {
         return employees.stream().allMatch(s -> s.getAge() >= 18);
     }
 
