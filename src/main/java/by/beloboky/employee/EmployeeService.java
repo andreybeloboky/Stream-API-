@@ -3,7 +3,6 @@ package by.beloboky.employee;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class EmployeeService {
     private final List<Employee> employees;
@@ -98,9 +97,7 @@ public class EmployeeService {
      * @return find Max, Min and Average values;
      */
     public IntSummaryStatistics getMaxMinAverageAge() {
-        IntSummaryStatistics toIntStream = employees.stream().collect(Collectors.summarizingInt(Employee::getAge));
-        ;
-        return toIntStream;
+        return employees.stream().collect(Collectors.summarizingInt(Employee::getAge));
     }
 
     /**

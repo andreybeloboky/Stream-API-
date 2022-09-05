@@ -15,19 +15,34 @@ import java.util.stream.Stream;
 public class EmployeesAndDutiesFileRepository {
 
     private static final String FILE_EMPLOYEE = "data_users.csv";
+
+    private static final String FILE_DUTIES = "duties_with_data.csv";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final File file;
+    private final File fileDuties;
 
     public EmployeesAndDutiesFileRepository() {
         this.file = new File(FILE_EMPLOYEE);
+        this.fileDuties = new File(FILE_DUTIES);
     }
 
     /**
      * @return The List includes employees.
      */
     public List<Employee> readFromFileEmployees() {
-        try {
-            return Files.lines(file.toPath(), StandardCharsets.UTF_8).map(EmployeesAndDutiesFileRepository::convertToEmployee).toList();
+        try (Stream<String> employees = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
+            return employees.map(this::convertToEmployee).toList();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * @return The List includes duties.
+     */
+    public List<Duty> readFromFileDuties() {
+        try(Stream<String> duties= Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8)) {
+            return duties.map(this::convertToDuties).toList();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -37,7 +52,7 @@ public class EmployeesAndDutiesFileRepository {
      * @param s is string from duties_with_data file.
      * @return Duties object
      */
-    private static Duty convertToDuties(String s) {
+    private Duty convertToDuties(String s) {
         String[] employeeAttributes = s.split(",");
         LocalDate date = LocalDate.parse(employeeAttributes[1], FORMATTER);
         int currentID = Integer.parseInt(employeeAttributes[0]);
@@ -48,15 +63,15 @@ public class EmployeesAndDutiesFileRepository {
      * @param s is string from data_users file.
      * @return Employee object
      */
-    private static Employee convertToEmployee(String s) {
+    private Employee convertToEmployee(String s) {
         String[] find = s.split(",");
         int age = Integer.parseInt(find[2]);
         int salary = Integer.parseInt(find[5]);
         int workExp = Integer.parseInt(find[6]);
         int id = Integer.parseInt(find[7]);
         List<Duty> forEachEmployee = findDutyForEmployee(id);
-        Position position = findEmployeePosition(find);
-        Sex sex = findEmployeeSex(find);
+        Position position = convertToPosition(find);
+        Sex sex = convertToSex(find);
         return new Employee(find[0], find[1], age, sex, position, salary, workExp, forEachEmployee, id);
     }
 
@@ -64,7 +79,7 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's position.
      * @return Position type, what the employee's position is.
      */
-    private static Position findEmployeePosition(String[] find) {
+    private Position convertToPosition(String[] find) {
         switch (find[4]) {
             case "manager" -> {
                 return Position.MANAGER;
@@ -87,7 +102,7 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's sex.
      * @return Sex that the employee has.
      */
-    private static Sex findEmployeeSex(String[] find) {
+    private Sex convertToSex(String[] find) {
         if (Objects.equals(find[3], "M") || Objects.equals(find[3], "W")) {
             return Objects.equals(find[3], "M") ? Sex.MALE : Sex.FEMALE;
         } else {
@@ -99,18 +114,13 @@ public class EmployeesAndDutiesFileRepository {
      * @param id - id employee;
      * @return List Duty type of each employees;
      */
-    private static List<Duty> findDutyForEmployee(int id) {
+    private List<Duty> findDutyForEmployee(int id) {
         List<Duty> forEachEmployee = new LinkedList<>();
-        File fileDuties = new File("duties_with_data.csv");
-        try {
-            List<Duty> dutiesForEmployee = Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
-            for (Duty duties : dutiesForEmployee) {
-                if (duties.getID() == id) {
-                    forEachEmployee.add(duties);
-                }
+        List<Duty> dutiesForEmployee = this.readFromFileDuties();
+        for (Duty duties : dutiesForEmployee) {
+            if (duties.getID() == id) {
+                forEachEmployee.add(duties);
             }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
         return forEachEmployee;
     }
