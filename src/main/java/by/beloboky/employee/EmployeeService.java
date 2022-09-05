@@ -64,7 +64,6 @@ public class EmployeeService {
                     return Objects.equals(value.getDate(), date);
                 }
         ).map(Duty::getDuty).toList();
-
     }
 
     /**
@@ -99,7 +98,8 @@ public class EmployeeService {
      * @return find Max, Min and Average values;
      */
     public IntSummaryStatistics getMaxMinAverageAge() {
-        IntSummaryStatistics toIntStream = employees.stream().collect(Collectors.summarizingInt(Employee::getAge));;
+        IntSummaryStatistics toIntStream = employees.stream().collect(Collectors.summarizingInt(Employee::getAge));
+        ;
         return toIntStream;
     }
 
