@@ -15,15 +15,11 @@ import java.util.stream.Stream;
 public class EmployeesAndDutiesFileRepository {
 
     private static final String FILE_EMPLOYEE = "data_users.csv";
-
-    private static final String FILE_DUTIES = "duties_with_data.csv";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final File file;
-    private final File fileDuties;
 
     public EmployeesAndDutiesFileRepository() {
         this.file = new File(FILE_EMPLOYEE);
-        this.fileDuties = new File(FILE_DUTIES);
     }
 
     /**
@@ -38,40 +34,29 @@ public class EmployeesAndDutiesFileRepository {
     }
 
     /**
-     * @return The List includes duties.
-     */
-    public List<Duty> readFromFileDuties() {
-        try {
-            return Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    /**
      * @param s is string from duties_with_data file.
      * @return Duties object
      */
     private static Duty convertToDuties(String s) {
-        String[] find = s.split(",");
-        LocalDate date = LocalDate.parse(find[1], FORMATTER);
-        int currentID = Integer.parseInt(find[0]);
-        return new Duty(currentID, date, find[2]);
+        String[] employeeAttributes = s.split(",");
+        LocalDate date = LocalDate.parse(employeeAttributes[1], FORMATTER);
+        int currentID = Integer.parseInt(employeeAttributes[0]);
+        return new Duty(currentID, date, employeeAttributes[2]);
     }
 
     /**
      * @param s is string from data_users file.
      * @return Employee object
      */
-    private static Employee convertToEmployee(String s) throws NotFoundEmployeeException {
+    private static Employee convertToEmployee(String s) {
         String[] find = s.split(",");
         int age = Integer.parseInt(find[2]);
         int salary = Integer.parseInt(find[5]);
         int workExp = Integer.parseInt(find[6]);
         int id = Integer.parseInt(find[7]);
         List<Duty> forEachEmployee = findDutyForEmployee(id);
-        Position position = isEmployeePosition(find);
-        Sex sex = isEmployeeSex(find);
+        Position position = findEmployeePosition(find);
+        Sex sex = findEmployeeSex(find);
         return new Employee(find[0], find[1], age, sex, position, salary, workExp, forEachEmployee, id);
     }
 
@@ -79,17 +64,22 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's position.
      * @return Position type, what the employee's position is.
      */
-    private static Position isEmployeePosition(String[] find) throws NotFoundEmployeeException {
-        if (Objects.equals(find[4], "manager")) {
-            return Position.MANAGER;
-        } else if (Objects.equals(find[4], "employee")) {
-            return Position.EMPLOYEE;
-        } else if (Objects.equals(find[4], "security")) {
-            return Position.SECURITY;
-        } else if (Objects.equals(find[4], "director")) {
-            return Position.DIRECTOR;
-        } else {
-            throw new NotFoundEmployeeException("Not found position");
+    private static Position findEmployeePosition(String[] find) {
+        switch (find[4]) {
+            case "manager" -> {
+                return Position.MANAGER;
+            }
+            case "security" -> {
+                return Position.SECURITY;
+            }
+            case "director" -> {
+                return Position.DIRECTOR;
+            }
+            case "employee" -> {
+                return Position.EMPLOYEE;
+            }
+            default ->
+                    throw new NotFoundEmployeeException(String.format("Type %s is not a valid position. Please check you file", find[4]));
         }
     }
 
@@ -97,11 +87,11 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's sex.
      * @return Sex that the employee has.
      */
-    private static Sex isEmployeeSex(String[] find) throws NotFoundEmployeeException {
-        if (Objects.equals(find[3], "M") || Objects.equals(find[3], "F")) {
+    private static Sex findEmployeeSex(String[] find) {
+        if (Objects.equals(find[3], "M") || Objects.equals(find[3], "W")) {
             return Objects.equals(find[3], "M") ? Sex.MALE : Sex.FEMALE;
         } else {
-            throw new NotFoundEmployeeException("Not found position");
+            throw new NotFoundEmployeeException(String.format("Type %s is not a valid position. Please check you file", find[3]));
         }
     }
 
@@ -111,12 +101,16 @@ public class EmployeesAndDutiesFileRepository {
      */
     private static List<Duty> findDutyForEmployee(int id) {
         List<Duty> forEachEmployee = new LinkedList<>();
-        EmployeesAndDutiesFileRepository takeDutyList = new EmployeesAndDutiesFileRepository();
-        List<Duty> dutiesForEmployee = takeDutyList.readFromFileDuties();
-        for (Duty duties : dutiesForEmployee) {
-            if (duties.getID() == id) {
-                forEachEmployee.add(duties);
+        File fileDuties = new File("duties_with_data.csv");
+        try {
+            List<Duty> dutiesForEmployee = Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8).map(EmployeesAndDutiesFileRepository::convertToDuties).toList();
+            for (Duty duties : dutiesForEmployee) {
+                if (duties.getID() == id) {
+                    forEachEmployee.add(duties);
+                }
             }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
         return forEachEmployee;
     }
