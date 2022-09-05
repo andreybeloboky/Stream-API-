@@ -1,6 +1,7 @@
 package by.beloboky.employee;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class EmployeeConsoleController {
 
@@ -70,5 +71,6 @@ public class EmployeeConsoleController {
         System.out.println("TASK FOURTEEN");
         Map<Integer, Integer> sumOfAllEmployeeByPosition = employeeService.findSumOfAllEmployeeByPosition();
         System.out.println(Collections.singletonList(sumOfAllEmployeeByPosition));
+
     }
 }

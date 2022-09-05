@@ -99,8 +99,8 @@ public class EmployeeService {
      * @return find Max, Min and Average values;
      */
     public IntSummaryStatistics getMaxMinAverageAge() {
-        IntStream toIntStream = employees.stream().mapToInt(Employee::getAge);
-        return toIntStream.summaryStatistics();
+        IntSummaryStatistics toIntStream = employees.stream().collect(Collectors.summarizingInt(Employee::getAge));;
+        return toIntStream;
     }
 
     /**

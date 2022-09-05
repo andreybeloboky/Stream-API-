@@ -79,7 +79,7 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's position.
      * @return Position type, what the employee's position is.
      */
-    private static Position isEmployeePosition(String[] find) {
+    private static Position isEmployeePosition(String[] find) throws NotFoundEmployeeException {
         if (Objects.equals(find[4], "manager")) {
             return Position.MANAGER;
         } else if (Objects.equals(find[4], "employee")) {
@@ -89,7 +89,7 @@ public class EmployeesAndDutiesFileRepository {
         } else if (Objects.equals(find[4], "director")) {
             return Position.DIRECTOR;
         } else {
-            throw new RuntimeException("Not found position");
+            throw new NotFoundEmployeeException("Not found position");
         }
     }
 
@@ -97,11 +97,11 @@ public class EmployeesAndDutiesFileRepository {
      * @param find - take a string with employee's sex.
      * @return Sex that the employee has.
      */
-    private static Sex isEmployeeSex(String[] find) {
+    private static Sex isEmployeeSex(String[] find) throws NotFoundEmployeeException {
         if (Objects.equals(find[3], "M") || Objects.equals(find[3], "F")) {
             return Objects.equals(find[3], "M") ? Sex.MALE : Sex.FEMALE;
         } else {
-            throw new RuntimeException("Not found position");
+            throw new NotFoundEmployeeException("Not found position");
         }
     }
 
