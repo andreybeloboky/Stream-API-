@@ -15,15 +15,16 @@ import java.util.stream.Stream;
 public class EmployeesAndDutiesFileRepository {
 
     private static final String FILE_EMPLOYEE = "data_users.csv";
-
     private static final String FILE_DUTIES = "duties_with_data.csv";
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private List<Duty> dutiesForEmployee;
     private final File file;
     private final File fileDuties;
 
     public EmployeesAndDutiesFileRepository() {
         this.file = new File(FILE_EMPLOYEE);
         this.fileDuties = new File(FILE_DUTIES);
+        this.dutiesForEmployee = null;
     }
 
     /**
@@ -41,7 +42,7 @@ public class EmployeesAndDutiesFileRepository {
      * @return The List includes duties.
      */
     public List<Duty> readFromFileDuties() {
-        try(Stream<String> duties= Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8)) {
+        try (Stream<String> duties = Files.lines(fileDuties.toPath(), StandardCharsets.UTF_8)) {
             return duties.map(this::convertToDuties).toList();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -116,10 +117,12 @@ public class EmployeesAndDutiesFileRepository {
      */
     private List<Duty> findDutyForEmployee(int id) {
         List<Duty> forEachEmployee = new LinkedList<>();
-        List<Duty> dutiesForEmployee = this.readFromFileDuties();
-        for (Duty duties : dutiesForEmployee) {
-            if (duties.getID() == id) {
-                forEachEmployee.add(duties);
+        if (this.dutiesForEmployee == null) {
+            this.dutiesForEmployee = this.readFromFileDuties();
+            for (Duty duties : dutiesForEmployee) {
+                if (duties.getID() == id) {
+                    forEachEmployee.add(duties);
+                }
             }
         }
         return forEachEmployee;

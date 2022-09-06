@@ -10,7 +10,7 @@ Step 1; - Install JDK 17.
 
 Step 2: open a terminal, point to the folder or package where your main program is present.
 
-Step 3: - compile it with command javac. javac *.java in folder project > src > com > company.
+Step 3: - compile it with command javac. javac *.java in folder project > src > main > java > by > beloboky > employee.
 
 Step 4: - After the compilation class file is available, run it with java filename
 
