@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class EmployeesAndDutiesFileRepository {
     public EmployeesAndDutiesFileRepository() {
         this.file = new File(FILE_EMPLOYEE);
         this.fileDuties = new File(FILE_DUTIES);
-        this.dutiesForEmployee = null;
+        this.dutiesForEmployee = this.readFromFileDuties();
     }
 
     /**
@@ -117,12 +118,9 @@ public class EmployeesAndDutiesFileRepository {
      */
     private List<Duty> findDutyForEmployee(int id) {
         List<Duty> forEachEmployee = new LinkedList<>();
-        if (this.dutiesForEmployee == null) {
-            this.dutiesForEmployee = this.readFromFileDuties();
-            for (Duty duties : dutiesForEmployee) {
-                if (duties.getID() == id) {
-                    forEachEmployee.add(duties);
-                }
+        for (Duty duties : this.dutiesForEmployee) {
+            if (duties.getID() == id) {
+                forEachEmployee.add(duties);
             }
         }
         return forEachEmployee;
